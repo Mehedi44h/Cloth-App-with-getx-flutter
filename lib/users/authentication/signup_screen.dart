@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getxapp/users/authentication/signup_screen.dart';
+import 'package:getxapp/users/authentication/login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   var formKey = GlobalKey<FormState>();
+  var nameController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObscure = true.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black26,
         body: LayoutBuilder(
           builder: (context, cons) {
             return ConstrainedBox(
@@ -25,19 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // login header
+                      // signup header
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: 285,
                         child: Image.asset(
-                          "images/login.jpg",
+                          "images/register.jpg",
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(18),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.white24,
+                              color: Colors.white60,
                               borderRadius: BorderRadius.all(
                                 Radius.circular(60),
                               ),
@@ -52,11 +53,61 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
                             child: Column(
                               children: [
-                                // email-pass login button
+                                //name- email-pass signup button
                                 Form(
                                   key: formKey,
                                   child: Column(
                                     children: [
+                                      TextFormField(
+                                        controller: nameController,
+                                        validator: (val) => val == ""
+                                            ? "please enter name"
+                                            : null,
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.person,
+                                            color: Colors.black,
+                                          ),
+                                          hintText: "name",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: const BorderSide(
+                                              color: Colors.white60,
+                                            ),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 6,
+                                          ),
+                                          fillColor: Colors.white,
+                                          filled: true,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 18,
+                                      ),
                                       TextFormField(
                                         controller: emailController,
                                         validator: (val) => val == ""
@@ -185,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               horizontal: 28,
                                             ),
                                             child: Text(
-                                              'Login',
+                                              'SignUp',
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -201,15 +252,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("Don't have and account?"),
+                                    Text("Already have an account?"),
                                     TextButton(
                                       onPressed: () {
-                                        Get.to(
-                                          SignUpScreen(),
-                                        );
+                                        Get.to(LoginScreen());
                                       },
                                       child: Text(
-                                        "SignUp here",
+                                        "Login here",
                                         style: TextStyle(
                                           color: Colors.orangeAccent,
                                           fontSize: 16,
@@ -218,30 +267,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  "Or",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                // admin
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Are you an admin?"),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Click here",
-                                        style: TextStyle(
-                                          color: Colors.orangeAccent,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // Text(
+                                //   "Or",
+                                //   style: TextStyle(
+                                //     color: Colors.black,
+                                //     fontSize: 16,
+                                //   ),
+                                // ),
+                                // // admin
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   children: [
+                                //     Text("Are you an admin?"),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         "Click here",
+                                //         style: TextStyle(
+                                //           color: Colors.orangeAccent,
+                                //           fontSize: 16,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
