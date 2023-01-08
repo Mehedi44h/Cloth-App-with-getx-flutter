@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
                             child: Column(
                               children: [
+                                // email-pass login button
                                 Form(
                                   key: formKey,
                                   child: Column(
@@ -194,6 +195,47 @@ class _LoginScreenState extends State<LoginScreen> {
                                       )
                                     ],
                                   ),
+                                ),
+                                // don't have button
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Don't have and account?"),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Register here",
+                                        style: TextStyle(
+                                          color: Colors.orangeAccent,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "Or",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                // admin
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Are you an admin?"),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Click here",
+                                        style: TextStyle(
+                                          color: Colors.orangeAccent,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
