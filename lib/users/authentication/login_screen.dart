@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getxapp/api_connection/api_connection.dart';
+import 'package:getxapp/users/authentication/login_screen.dart';
 import 'package:getxapp/users/authentication/signup_screen.dart';
+import 'package:getxapp/users/model/user.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -14,6 +21,28 @@ class _LoginScreenState extends State<LoginScreen> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObscure = true.obs;
+
+  loginUserNow() async {
+    var res = await http.post(
+      Uri.parse(API.login),
+      body: {
+        "user_email": emailController.text.trim(),
+        "user_password": passwordController.text.trim(),
+      },
+    );
+    if (res.statusCode == 200) {
+      var resBodyOfLogin = jsonDecode(res.body);
+      if (resBodyOfLogin['success'] == true) {
+        Fluttertoast.showToast(msg: "congratulation,you are login successfull");
+
+        User userInfo = User.fromJson(resBodyOfLogin["userData"]);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Error,\n put currect email and password and try again");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,7 +205,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: Colors.blue,
                                         borderRadius: BorderRadius.circular(30),
                                         child: InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            loginUserNow();
+                                          },
                                           borderRadius:
                                               BorderRadius.circular(30),
                                           child: Padding(
@@ -209,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         );
                                       },
                                       child: Text(
-                                        "SignUp here",
+                                        "SignUp",
                                         style: TextStyle(
                                           color: Colors.orangeAccent,
                                           fontSize: 16,

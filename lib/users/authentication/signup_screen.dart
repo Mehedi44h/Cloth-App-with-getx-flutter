@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getxapp/api_connection/api_connection.dart';
 import 'package:getxapp/users/authentication/login_screen.dart';
+import 'package:getxapp/users/model/user.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -15,6 +21,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObscure = true.obs;
+  registerAnsaveUserRecord() async {
+    User userModel = User(1, nameController.text.trim(),
+        emailController.text.trim(), passwordController.text.trim());
+    try {
+      var res = await http.post(
+        Uri.parse(API.signUp),
+        body: userModel.toJson(),
+      );
+      if (res.statusCode == 200) {
+        var resBodyOfSignUp = jsonDecode(res.body);
+        if (resBodyOfSignUp['success'] == true) {
+          Fluttertoast.showToast(
+              msg: "congratulation,you are signup successfull");
+          setState(() {
+            nameController.clear();
+            emailController.clear();
+            passwordController.clear();
+          });
+        } else {
+          Fluttertoast.showToast(msg: "Erro,try again");
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  validateUserEmail() async {
+    try {
+      var res = await http.post(
+        Uri.parse(API.validateEmail),
+        body: {
+          'user_email': emailController.text.trim(),
+        },
+      );
+      if (res.statusCode == 200) //api conn succes
+      {
+        var resBodyValidateEmail = jsonDecode(res.body);
+        if (resBodyValidateEmail['emailFound'] == true) {
+          Fluttertoast.showToast(
+              msg: "Email already exist.please try another email");
+        } else {
+          registerAnsaveUserRecord();
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,7 +285,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         color: Colors.blue,
                                         borderRadius: BorderRadius.circular(30),
                                         child: InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              validateUserEmail();
+                                            }
+                                          },
                                           borderRadius:
                                               BorderRadius.circular(30),
                                           child: Padding(
@@ -248,7 +311,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ],
                                   ),
                                 ),
-                                // don't have button
+
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -267,30 +330,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                                   ],
                                 ),
-                                // Text(
-                                //   "Or",
-                                //   style: TextStyle(
-                                //     color: Colors.black,
-                                //     fontSize: 16,
-                                //   ),
-                                // ),
-                                // // admin
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   children: [
-                                //     Text("Are you an admin?"),
-                                //     TextButton(
-                                //       onPressed: () {},
-                                //       child: Text(
-                                //         "Click here",
-                                //         style: TextStyle(
-                                //           color: Colors.orangeAccent,
-                                //           fontSize: 16,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               ],
                             ),
                           ),
