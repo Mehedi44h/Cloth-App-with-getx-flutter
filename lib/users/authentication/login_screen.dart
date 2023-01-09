@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:getxapp/api_connection/api_connection.dart';
 import 'package:getxapp/users/authentication/login_screen.dart';
 import 'package:getxapp/users/authentication/signup_screen.dart';
+import 'package:getxapp/users/fragments/dashboard_of_fragments.dart';
 import 'package:getxapp/users/model/user.dart';
+import 'package:getxapp/users/userPreferences/user_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -23,23 +25,32 @@ class _LoginScreenState extends State<LoginScreen> {
   var isObscure = true.obs;
 
   loginUserNow() async {
-    var res = await http.post(
-      Uri.parse(API.login),
-      body: {
-        "user_email": emailController.text.trim(),
-        "user_password": passwordController.text.trim(),
-      },
-    );
-    if (res.statusCode == 200) {
-      var resBodyOfLogin = jsonDecode(res.body);
-      if (resBodyOfLogin['success'] == true) {
-        Fluttertoast.showToast(msg: "congratulation,you are login successfull");
+    try {
+      var res = await http.post(
+        Uri.parse(API.login),
+        body: {
+          "user_email": emailController.text.trim(),
+          "user_password": passwordController.text.trim(),
+        },
+      );
+      if (res.statusCode == 200) {
+        var resBodyOfLogin = jsonDecode(res.body);
+        if (resBodyOfLogin['success'] == true) {
+          Fluttertoast.showToast(
+              msg: "congratulation,you are login successfull");
 
-        User userInfo = User.fromJson(resBodyOfLogin["userData"]);
-      } else {
-        Fluttertoast.showToast(
-            msg: "Error,\n put currect email and password and try again");
+          User userInfo = User.fromJson(resBodyOfLogin["userData"]);
+          await RememberUserPrefs.saveRememberUser(userInfo);
+          Future.delayed(Duration(milliseconds: 2000), () {
+            Get.to(DashboardOfFragments());
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "Error,\n put currect email and password and try again");
+        }
       }
+    } catch (errorMsg) {
+      print("error::" + errorMsg.toString());
     }
   }
 
@@ -206,7 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                         borderRadius: BorderRadius.circular(30),
                                         child: InkWell(
                                           onTap: () {
+                                            if(formKey.currentState!.validate()){
                                             loginUserNow();
+
+                                            }
                                           },
                                           borderRadius:
                                               BorderRadius.circular(30),
